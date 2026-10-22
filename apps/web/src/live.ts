@@ -13,9 +13,13 @@ interface LiveState {
   lastBlock: { height: number; proposer: string; hash: string } | null
   reorgDepth: number
   lastSlash: { height: number; proposer: string; at: number } | null
+  /** Most recent main-chain block (full JSON), for "what just happened" explanations. */
+  lastBlockJson: any | null
+  /** Class-wide events for the projector feed, newest first. */
+  events: { at: number; kind: string; height: number; text: string; who?: string; mode?: number }[]
 }
 
-let state: LiveState = { connected: false, info: null, tipVersion: 0, mempoolVersion: 0, lastBlock: null, reorgDepth: 0, lastSlash: null }
+let state: LiveState = { connected: false, info: null, tipVersion: 0, mempoolVersion: 0, lastBlock: null, reorgDepth: 0, lastSlash: null, lastBlockJson: null, events: [] }
 const listeners = new Set<() => void>()
 const set = (patch: Partial<LiveState>) => {
   state = { ...state, ...patch }
@@ -48,10 +52,13 @@ function connect() {
         set({ info: msg.info, tipVersion: state.tipVersion + 1, mempoolVersion: state.mempoolVersion + 1, reorgDepth: msg.reorgDepth })
         break
       case 'block':
-        if (msg.main) set({ lastBlock: { height: msg.block.header.height, proposer: msg.block.header.proposer, hash: msg.block.hash } })
+        if (msg.main) set({ lastBlock: { height: msg.block.header.height, proposer: msg.block.header.proposer, hash: msg.block.hash }, lastBlockJson: msg.block })
         break
       case 'tx':
         bumpMempool()
+        break
+      case 'event':
+        set({ events: [msg.event, ...state.events].slice(0, 40) })
         break
       case 'slash':
         set({ lastSlash: { height: msg.height, proposer: msg.proposer, at: Date.now() } })

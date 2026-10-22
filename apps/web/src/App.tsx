@@ -10,6 +10,11 @@ import { Admin } from './views/Admin'
 import { Ranks } from './views/Ranks'
 import { Wallet } from './views/Wallet'
 import './miner' // start following the chain so the miner is ready on any tab
+import './watcher'
+import { Toasts } from './components/Toasts'
+import { Celebrate } from './components/Celebrate'
+import { ModeSheet } from './components/ModeSheet'
+import { notify } from './notify'
 
 const TABS = [
   { id: 'mine', label: 'Mine' },
@@ -48,14 +53,19 @@ export function App() {
             <div className="sub">ISFCRcoin · block #{info?.height ?? '…'}</div>
           </div>
         </div>
-        <span className="status"><span className={`dot ${live.connected ? 'on' : ''}`} />{info ? modeName(info.mode) : 'offline'}</span>
+        <button className="status" onClick={() => info && notify.openSheet(info.nextMode)} title="How these rules work">
+          <span className={`dot ${live.connected ? 'on' : ''}`} />{info ? modeName(info.nextMode) : 'offline'}<span className="status-q">?</span>
+        </button>
       </header>
       {info?.scheduledSwitch && (
         <div className="banner switch" style={{ marginBottom: 12 }}>
           Switching to <b>{modeName(info.scheduledSwitch.mode)}</b> at block {info.scheduledSwitch.activateAt}
         </div>
       )}
-      <main>
+      <Toasts />
+      <Celebrate />
+      <ModeSheet />
+      <main key={`${tab}/${sub}`} className="page">
         {/* #/present?code=… (the projector's QR code) lands on Home, where the presence screen reads the code. */}
         {tab === 'wallet' ? <Wallet /> : tab === 'learn' ? <Learn sub={sub} /> : tab === 'ranks' ? <Ranks /> : <Home />}
       </main>

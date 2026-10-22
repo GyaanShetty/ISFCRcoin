@@ -6,6 +6,7 @@ import { coins, short } from '../format'
 import { useLive } from '../live'
 import { useWallet, wallet } from '../wallet'
 import { ShowTipsAgain, Tip } from '../components/Tip'
+import { Activity } from '../components/Activity'
 
 export function Wallet() {
   const { key } = useWallet()
@@ -37,6 +38,8 @@ export function Wallet() {
 
       <Tip id="wallet-send">To send coins, ask a classmate for their address. It's under Receive on their phone.</Tip>
       <Send nextNonce={acct?.nextNonce ?? 0} chainId={live.info?.chainId} />
+
+      <Activity />
 
       <section className="card stack">
         <h3>Receive</h3>

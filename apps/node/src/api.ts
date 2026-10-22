@@ -84,6 +84,7 @@ export async function buildApi(node: IsfcrNode, peers: Peer[] = []): Promise<Fas
   node.on('tx', (tx: SignedTx, id: string) => broadcast({ type: 'tx', id, tx: txToJSON(tx) }))
   node.on('reset', (g: GenesisConfig) => broadcast({ type: 'reset', chainId: g.chainId }))
   node.on('slash', (e: { height: number; proposer: string }) => broadcast({ type: 'slash', ...e }))
+  node.on('event', (e: unknown) => broadcast({ type: 'event', event: e }))
 
   app.get('/ws', { websocket: true }, (socket: WS) => {
     clients.add(socket)
@@ -143,6 +144,12 @@ export async function buildApi(node: IsfcrNode, peers: Peer[] = []): Promise<Fas
   })
 
   app.get('/api/leaderboard', async () => node.leaderboard())
+
+  /** Everything that touched an address: mined, sent, received, staked… newest first, pending included. */
+  app.get('/api/history/:addr', async (req: FastifyRequest<{ Params: { addr: string } }>) => node.activity.history(requireAddress(req.params.addr)))
+
+  /** Recent class-wide events, for the projector feed. */
+  app.get('/api/events', async () => node.activity.recent())
   app.get('/api/sessions', async () => node.store.listSessions())
 
   /** Block template for miners. `txs` (comma-separated ids) restricts selection to the miner's picks. */

@@ -4,6 +4,7 @@ import { api, type BlockSummary, type LotteryStatus, type PosStatus } from '../a
 import { Big } from '../components/Big'
 import { ForkView, readPeer } from '../components/ForkView'
 import { GameProjector } from '../components/GameProjector'
+import { EventFeed } from '../components/EventFeed'
 import { HOST_ATTESTED_MODES } from '@isfcr/core'
 import { compact, initials, modeName, shortAddr } from '../format'
 import { useLive } from '../live'
@@ -132,6 +133,7 @@ export function Projector() {
         </section>
         )}
       </div>
+      <div style={{ marginTop: 16 }}><EventFeed names={names} /></div>
       {readPeer() && <div style={{ marginTop: 16 }}><ForkView peer={readPeer()} /></div>}
       <AdminPanel />
     </div>

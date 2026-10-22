@@ -127,6 +127,19 @@ export interface RoundStatus {
   topTrust?: [string, number][]
 }
 
+export interface HistoryItem {
+  kind: 'mined' | 'sent' | 'received' | 'staked' | 'unstaked' | 'proposed' | 'voted' | 'faucet'
+  height: number | null
+  timestamp: number
+  amount: string
+  fee?: string
+  counterparty?: string
+  txid?: string
+  detail?: string
+}
+
+export interface ClassEvent { at: number; kind: string; height: number; text: string; who?: string; mode?: number }
+
 export interface MempoolEntry {
   id: string
   sender: string
@@ -140,6 +153,8 @@ export const api = {
   block: (id: string | number) => request<any>(`/api/block/${id}`),
   account: (addr: string) => request<AccountView>(`/api/state/${addr}`),
   mempool: (limit = 200) => request<{ size: number; txs: MempoolEntry[] }>(`/api/mempool?limit=${limit}`),
+  history: (addr: string) => request<HistoryItem[]>(`/api/history/${addr}`),
+  events: () => request<ClassEvent[]>('/api/events'),
   leaderboard: () => request<{ address: string; blocks: number; rewards: string }[]>('/api/leaderboard'),
   template: (proposer: string, txIds?: string[]) =>
     request<{ block: any; reward: string; fees: string }>(

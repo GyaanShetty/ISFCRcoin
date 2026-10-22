@@ -10,6 +10,7 @@ import { DifficultyService } from './difficulty'
 import { PosService } from './pos'
 import { LotteryService } from './vrf'
 import { RoundService } from './rounds'
+import { Activity } from './activity'
 import { type AddResult, type ChainNode, ChainStore, type TipChange } from './chain'
 import type { NodeConfig } from './config'
 import { Mempool } from './mempool'
@@ -41,6 +42,7 @@ export class IsfcrNode extends EventEmitter {
   readonly pos: PosService
   readonly lottery: LotteryService
   readonly rounds: RoundService
+  readonly activity = new Activity(this)
   private seenShares = new Set<string>()
   private replaying = false
 
@@ -144,6 +146,7 @@ export class IsfcrNode extends EventEmitter {
       this.pos.onTip(tip)
       this.lottery.onTip(tip)
       this.rounds.onTip(tip)
+      this.activity.onTip(tip)
       this.emit('tip', { tip, reorgDepth: removed.length })
     }
   }
@@ -309,6 +312,7 @@ export class IsfcrNode extends EventEmitter {
     this.pos.clear()
     this.lottery.clear()
     this.rounds.clear()
+    this.activity.clear()
     this.seenShares.clear()
     this.initChain(g)
     this.emit('reset', g)

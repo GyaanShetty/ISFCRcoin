@@ -7,6 +7,7 @@ import { getWallet, subscribeWallet } from './wallet'
 import './lottery' // follows the chain so lottery tickets are entered on any tab
 import './validator'
 import './round'
+import { progress } from './progress'
 
 /**
  * Mining lives outside React so it keeps running while students switch tabs.
@@ -157,6 +158,8 @@ export const miner = {
   start() {
     if (state.mining || !state.template) return
     set({ mining: true })
+    const m = state.template.block.header.mode
+    progress.tried(m)
     requestWakeLock()
     post(state.template.block)
   },

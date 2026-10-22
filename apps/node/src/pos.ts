@@ -108,6 +108,7 @@ export class PosService {
     try {
       this.node.hostSubmit({ type: TxType.Slash, headerA: encodeHeader(first.header), headerB: encodeHeader(h) })
       this.node.emit('slash', { height: h.height, proposer: h.proposer })
+      this.node.activity.log({ at: Date.now(), kind: 'slash', height: h.height, who: h.proposer, text: `Double-signing caught at block ${h.height}: half the stake burned` })
     } catch {
       // already reported, or the offender had no stake left
     }

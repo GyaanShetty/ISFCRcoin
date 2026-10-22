@@ -9,8 +9,13 @@ import { Explorer, TamperLab } from './Explorer'
 import { SignVerify } from './SignVerify'
 import { GovernancePage } from '../components/Governance'
 import { ShowTipsAgain, Tip } from '../components/Tip'
+import { Glossary, Lessons } from './Lessons'
+import { LESSONS } from '../teach'
+import { useProgress } from '../progress'
 
 const SECTIONS = [
+  { id: 'lessons', title: 'Lessons', blurb: 'Every ruleset, explained, with a check question', cls: 'paper', view: Lessons },
+  { id: 'glossary', title: 'Glossary', blurb: 'Hash, nonce, Merkle root, stake…', cls: 'dark', view: Glossary },
   { id: 'block', title: 'Inside your block', blurb: 'Pick transactions, see the header and Merkle tree', cls: 'orange', view: BlockInside },
   { id: 'chain', title: 'Explorer', blurb: 'Every block the class has mined', cls: 'blue', view: Explorer },
   { id: 'tamper', title: 'Tamper lab', blurb: 'Try to rewrite history', cls: 'paper', view: TamperLab },
@@ -19,22 +24,24 @@ const SECTIONS = [
 ] as const
 
 export function Learn({ sub }: { sub: string }) {
-  const section = SECTIONS.find((s) => s.id === sub)
+  const [id, rest = ''] = sub.split('/')
+  const section = SECTIONS.find((s) => s.id === id)
   if (section) {
-    const View = section.view
+    const View = section.view as (p: { sub: string }) => JSX.Element | null
     return (
       <div className="stack">
         <div className="row between">
           <a href="#/learn"><button className="ghost">← Learn</button></a>
           <h2>{section.title}</h2>
         </div>
-        <View />
+        <View sub={rest} />
       </div>
     )
   }
   return (
     <div className="stack">
       <h1>Learn</h1>
+      <ProgressCard />
       <Tip id="learn-optional">Optional. Open any of these to see how blocks, hashes and signatures work.</Tip>
       <div className="grid2">
         {SECTIONS.map((s) => (
@@ -46,6 +53,28 @@ export function Learn({ sub }: { sub: string }) {
       </div>
       <ShowTipsAgain />
     </div>
+  )
+}
+
+/** How far along you are: rulesets tried in class, lesson checks passed. */
+function ProgressCard() {
+  const p = useProgress()
+  const total = LESSONS.length
+  const pct = Math.round((100 * (p.tried.length + p.passed.length)) / (2 * total))
+  const r = 34
+  const c = 2 * Math.PI * r
+  return (
+    <section className="card progress-card">
+      <svg viewBox="0 0 80 80" className="ring" aria-hidden="true">
+        <circle cx="40" cy="40" r={r} className="ring-bg" />
+        <circle cx="40" cy="40" r={r} className="ring-fg" style={{ strokeDasharray: c, strokeDashoffset: c * (1 - pct / 100) }} />
+        <text x="40" y="45" textAnchor="middle">{pct}%</text>
+      </svg>
+      <div>
+        <div className="t">{p.tried.length} of {total} rulesets tried</div>
+        <div className="s">{p.passed.length} lesson checks passed · {Object.values(p.wins).reduce((a, b) => a + b, 0)} blocks made</div>
+      </div>
+    </section>
   )
 }
 

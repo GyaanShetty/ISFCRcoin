@@ -573,3 +573,21 @@ describe('host-run games', () => {
     } finally { done() }
   })
 })
+
+describe('activity', () => {
+  it('lists what touched an address, newest first, and logs class events', async () => {
+    const { app, node } = await setup()
+    const a = generateKeyPair()
+    const b = generateKeyPair()
+    node.faucetSend(a.address, 10n * UNIT)
+    await mineVia(app, a.address)
+    node.submitTx(signTx({ chainId: node.chain.genesis.chainId, nonce: 0, fee: UNIT / 10n, body: { type: TxType.Transfer, to: b.address, amount: 2n * UNIT } }, a.privateKey, a.publicKey))
+    const hist = (await json(app, 'GET', `/api/history/${a.address}`)).body
+    expect(hist.map((h: any) => h.kind)).toEqual(['sent', 'mined', 'faucet'])
+    expect(hist[0].height).toBeNull() // still pending
+    const forB = (await json(app, 'GET', `/api/history/${b.address}`)).body
+    expect(forB[0]).toMatchObject({ kind: 'received', counterparty: a.address, amount: String(2n * UNIT) })
+    const events = (await json(app, 'GET', '/api/events')).body
+    expect(events[0]).toMatchObject({ kind: 'block', height: 1 })
+  })
+})

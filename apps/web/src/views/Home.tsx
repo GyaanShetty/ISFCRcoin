@@ -7,6 +7,9 @@ import { VoteCard } from '../components/Governance'
 import { LotteryPanel } from '../components/LotteryPanel'
 import { Tip } from '../components/Tip'
 import { GamePanel } from '../components/GamePanel'
+import { ChainStrip } from '../components/ChainStrip'
+import { useCountUp } from '../components/CountUp'
+import { UNIT } from '@isfcr/core'
 import { coins, compact, leadingZeroBits } from '../format'
 import { useLive } from '../live'
 import { miner, useMiner } from '../miner'
@@ -42,6 +45,7 @@ export function Home() {
   const zeros = m.hash ? leadingZeroBits(m.hash) : 0
   const needed = next ? leadingZeroBits(next.header.target.padStart(64, '0')) : 0
   const pending = acct ? acct.nextNonce - acct.nonce : 0
+  const balanceShown = useCountUp(acct ? Number(BigInt(acct.balance) * 100n / UNIT) / 100 : 0)
   // Expected hashes for *your* block: in Dynamic PoW the host scales this to your speed.
   const myWork = next ? Number((1n << 256n) / (BigInt('0x' + next.header.target) + 1n)) : 0
 
@@ -65,7 +69,7 @@ export function Home() {
           <a href="#/wallet"><button className="small white">Send</button></a>
         </div>
         <div style={{ marginTop: 10 }}>
-          <Big v={acct ? coins(acct.balance) : '…'} small="ISFCR" size="xl" />
+          <Big v={acct ? balanceShown.toFixed(balanceShown % 1 ? 2 : 0).replace(/\.?0+$/, '') || '0' : '…'} small="ISFCR" size="xl" />
         </div>
         {pending > 0 && <div className="hint" style={{ marginTop: 8 }}>{pending} transaction{pending > 1 ? 's' : ''} waiting to be mined</div>}
       </section>
@@ -133,6 +137,8 @@ export function Home() {
 
         </>
       )}
+
+      <ChainStrip />
 
       <BlockTimes recent={recent} me={key?.address} />
     </div>
