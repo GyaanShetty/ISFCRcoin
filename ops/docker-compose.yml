@@ -1,0 +1,17 @@
+# Primary seed node (ISFCR GPU rig). Fill secrets in ops/.env (see .env.example).
+services:
+  node:
+    build: { context: .., dockerfile: ops/Dockerfile }
+    restart: unless-stopped
+    env_file: .env
+    ports: ["8080:8080"]
+    volumes: ["isfcr-data:/data"]
+  # Public HTTPS via the existing Cloudflare Tunnel (token from the Cloudflare dashboard).
+  tunnel:
+    image: cloudflare/cloudflared:2024.10.0
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment: [TUNNEL_TOKEN=${TUNNEL_TOKEN}]
+    depends_on: [node]
+volumes:
+  isfcr-data:

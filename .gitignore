@@ -1,0 +1,13 @@
+node_modules
+dist
+data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.env
+ops/.env
+# CLI key and session (holds a private key)
+.isfcr.json
+__pycache__/
+*.pyc
+.DS_Store

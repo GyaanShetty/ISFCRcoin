@@ -1,0 +1,17 @@
+# Second seed node (e.g. the Oracle VM). Follows the primary's chain and relays
+# blocks and transactions both ways. For the hard-fork demo, set OLD_RULES=1:
+# this node then ignores consensus switches and splits off at the activation block.
+services:
+  node:
+    build: { context: .., dockerfile: ops/Dockerfile }
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - PEERS=${PRIMARY_URL}
+      - FOLLOW_PEER=1
+      - OLD_RULES=${OLD_RULES:-0}
+      - TXGEN=0
+    ports: ["8080:8080"]
+    volumes: ["isfcr-peer-data:/data"]
+volumes:
+  isfcr-peer-data:
