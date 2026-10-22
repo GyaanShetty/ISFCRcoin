@@ -1,0 +1,21 @@
+{
+  "name": "isfcrcoin",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "dev:node": "npm run dev -w @isfcr/node",
+    "dev:web": "npm run dev -w @isfcr/web",
+    "build": "npm run build -w @isfcr/web"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "typescript": "5.6.3",
+    "vitest": "2.1.8"
+  }
+}

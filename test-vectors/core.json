@@ -1,0 +1,64 @@
+{
+  "keys": {
+    "faucetSeed": "0101010101010101010101010101010101010101010101010101010101010101",
+    "faucetPublicKey": "8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c",
+    "faucetAddress": "isfcr134750f98bd59fcfc946da45aaabe933be154a4b5"
+  },
+  "tx": {
+    "json": {
+      "chainId": "isfcr-test",
+      "publicKey": "8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c",
+      "nonce": 0,
+      "fee": "100000",
+      "body": {
+        "type": 1,
+        "to": "isfcr1b62e867fa2f33afe62d5d6b1642e1621d5433078",
+        "amount": "100000000"
+      },
+      "signature": "ad4e2d567334c5471cb9f120171ae893e0062edc7f11fdfe7495ceaf7e7d9836454d39169f01127e04125e790ee2d99b4d7673c525cf6f61d7f0e9fc062f770e"
+    },
+    "signingBytes": "0000000849534643522d54580000000a69736663722d746573748a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c000000000000000000000000000186a001b62e867fa2f33afe62d5d6b1642e1621d54330780000000005f5e100",
+    "encoded": "0000000849534643522d54580000000a69736663722d746573748a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c000000000000000000000000000186a001b62e867fa2f33afe62d5d6b1642e1621d54330780000000005f5e100ad4e2d567334c5471cb9f120171ae893e0062edc7f11fdfe7495ceaf7e7d9836454d39169f01127e04125e790ee2d99b4d7673c525cf6f61d7f0e9fc062f770e",
+    "hash": "85a60a290165c1abb53424d4a3b5c9f8790c3291107fcb97fe0f350972701a61"
+  },
+  "block": {
+    "json": {
+      "hash": "03a17a4311cd4e8cbc77ede304151ff62a0b8e516b1e5712ad2d8c7307fee00a",
+      "header": {
+        "version": 1,
+        "height": 1,
+        "prevHash": "8ef4189057cffb65ae8463e73885fdbaf1c18e0f14c43dc8b23138dfcb1ae7a3",
+        "merkleRoot": "e7e05585e84b36bfc4aedc4001a7bc2b9aefeff0d7d5be5ba3eec9fa45a9cc08",
+        "timestamp": 1700000015000,
+        "mode": 0,
+        "proposer": "isfcr1b62e867fa2f33afe62d5d6b1642e1621d5433078",
+        "target": "3ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "nonce": "22",
+        "proof": ""
+      },
+      "txs": [
+        {
+          "type": 0,
+          "height": 1,
+          "to": "isfcr1b62e867fa2f33afe62d5d6b1642e1621d5433078",
+          "amount": "10100000"
+        },
+        {
+          "chainId": "isfcr-test",
+          "publicKey": "8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c",
+          "nonce": 0,
+          "fee": "100000",
+          "body": {
+            "type": 1,
+            "to": "isfcr1b62e867fa2f33afe62d5d6b1642e1621d5433078",
+            "amount": "100000000"
+          },
+          "signature": "ad4e2d567334c5471cb9f120171ae893e0062edc7f11fdfe7495ceaf7e7d9836454d39169f01127e04125e790ee2d99b4d7673c525cf6f61d7f0e9fc062f770e"
+        }
+      ]
+    },
+    "merkleRoot": "e7e05585e84b36bfc4aedc4001a7bc2b9aefeff0d7d5be5ba3eec9fa45a9cc08",
+    "headerBytes": "0100000000000000018ef4189057cffb65ae8463e73885fdbaf1c18e0f14c43dc8b23138dfcb1ae7a3e7e05585e84b36bfc4aedc4001a7bc2b9aefeff0d7d5be5ba3eec9fa45a9cc080000018bcfe5a29800b62e867fa2f33afe62d5d6b1642e1621d543307803ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000016",
+    "hash": "03a17a4311cd4e8cbc77ede304151ff62a0b8e516b1e5712ad2d8c7307fee00a"
+  }
+}
