@@ -3,6 +3,7 @@ import { api } from '../api'
 import { useLive } from '../live'
 import { useWallet, wallet } from '../wallet'
 import { Tip } from '../components/Tip'
+import { Logo } from '../components/Logo'
 
 /** One step: pick a name, and we create the key, join the session and claim the faucet. */
 export function Onboarding() {
@@ -55,6 +56,7 @@ export function Onboarding() {
   return (
     <div className="welcome stack">
       <div className="hero">
+        <div className="hero-logo"><Logo size={88} animate /></div>
         <h1>ISFCRcoin</h1>
         <p>The class blockchain. Everyone in the room takes turns making the next block.</p>
       </div>

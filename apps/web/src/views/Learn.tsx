@@ -10,12 +10,16 @@ import { SignVerify } from './SignVerify'
 import { GovernancePage } from '../components/Governance'
 import { ShowTipsAgain, Tip } from '../components/Tip'
 import { Glossary, Lessons } from './Lessons'
+import { AttackLab, HashLab, NonceLab } from './Labs'
 import { LESSONS } from '../teach'
 import { useProgress } from '../progress'
 
 const SECTIONS = [
   { id: 'lessons', title: 'Lessons', blurb: 'Every ruleset, explained, with a check question', cls: 'paper', view: Lessons },
   { id: 'glossary', title: 'Glossary', blurb: 'Hash, nonce, Merkle root, stake…', cls: 'dark', view: Glossary },
+  { id: 'hash', title: 'Hash lab', blurb: 'Change one letter, watch the fingerprint scramble', cls: 'blue', view: HashLab },
+  { id: 'mine', title: 'Mine by hand', blurb: 'Find a nonce yourself; feel each zero get 16x harder', cls: 'orange', view: NonceLab },
+  { id: 'attack', title: '51% attack race', blurb: 'Can a secret chain overtake the real one?', cls: 'paper', view: AttackLab },
   { id: 'block', title: 'Inside your block', blurb: 'Pick transactions, see the header and Merkle tree', cls: 'orange', view: BlockInside },
   { id: 'chain', title: 'Explorer', blurb: 'Every block the class has mined', cls: 'blue', view: Explorer },
   { id: 'tamper', title: 'Tamper lab', blurb: 'Try to rewrite history', cls: 'paper', view: TamperLab },
@@ -43,7 +47,7 @@ export function Learn({ sub }: { sub: string }) {
       <h1>Learn</h1>
       <ProgressCard />
       <Tip id="learn-optional">Optional. Open any of these to see how blocks, hashes and signatures work.</Tip>
-      <div className="grid2">
+      <div className="grid2 wide-4">
         {SECTIONS.map((s) => (
           <a key={s.id} href={`#/learn/${s.id}`} className={`tile ${s.cls}`} style={{ textDecoration: 'none', minHeight: 150 }}>
             <span className="label" style={{ fontSize: 18, fontWeight: 600 }}>{s.title}</span>

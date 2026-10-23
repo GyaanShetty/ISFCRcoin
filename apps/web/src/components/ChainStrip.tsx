@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { allow } from '../motion'
 import { api, type BlockSummary } from '../api'
 import { initials, modeName, short } from '../format'
 import { useLive } from '../live'
@@ -10,6 +11,7 @@ export function ChainStrip() {
   const { key } = useWallet()
   const [blocks, setBlocks] = useState<BlockSummary[]>([])
   const [names, setNames] = useState<Record<string, string>>({})
+  const animated = useRef(new Map<string, boolean>()) // block hash → did it get the slide-in
   useEffect(() => {
     api.chain(6).then(setBlocks).catch(() => {})
     api.names().then(setNames).catch(() => {})
@@ -20,10 +22,11 @@ export function ChainStrip() {
       <div className="row between"><h3>The chain</h3><a href="#/learn/chain" className="hint">Explorer ›</a></div>
       <div className="strip">
         {blocks.map((b) => {
+          if (!animated.current.has(b.hash)) animated.current.set(b.hash, animated.current.size > 0 && allow('strip', 4000))
           const mine = b.proposer === key?.address
           const who = b.height === 0 ? 'Genesis' : mine ? 'You' : names[b.proposer] ?? short(b.proposer.slice(6), 3)
           return (
-            <div key={b.hash} className={`strip-block ${mine ? 'mine' : ''}`}>
+            <div key={b.hash} className={`strip-block ${mine ? 'mine' : ''} ${animated.current.get(b.hash) ? 'enter' : ''}`}>
               <span className="strip-h">#{b.height}</span>
               <span className="strip-who"><i>{initials(who)}</i>{who}</span>
               <span className="strip-hash mono">{b.hash.slice(0, 6)}</span>

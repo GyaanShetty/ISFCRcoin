@@ -36,10 +36,10 @@ export function Wallet() {
         </div>
       </section>
 
+      <div className="wallet-grid">
+      <div className="stack">
       <Tip id="wallet-send">To send coins, ask a classmate for their address. It's under Receive on their phone.</Tip>
       <Send nextNonce={acct?.nextNonce ?? 0} chainId={live.info?.chainId} />
-
-      <Activity />
 
       <section className="card stack">
         <h3>Receive</h3>
@@ -52,6 +52,9 @@ export function Wallet() {
 
       <KeyBackup />
       <ShowTipsAgain />
+      </div>
+      <Activity />
+      </div>
     </div>
   )
 }

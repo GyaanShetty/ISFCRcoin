@@ -50,7 +50,8 @@ export function Home() {
   const myWork = next ? Number((1n << 256n) / (BigInt('0x' + next.header.target) + 1n)) : 0
 
   return (
-    <div className="stack">
+    <div className="home">
+      <div className="home-main stack">
       {!powMode && !posMode && !lotteryMode && !gameMode && <div className="banner warn">The class is in <b>{live.info?.modeName}</b> mode. Hash mining is paused for this round.</div>}
       {dynamic && (
         <div className="banner switch">
@@ -138,9 +139,12 @@ export function Home() {
         </>
       )}
 
-      <ChainStrip />
-
-      <BlockTimes recent={recent} me={key?.address} />
+      </div>
+      {/* On laptops this column sits beside the main one; on phones it follows below. */}
+      <div className="home-side stack">
+        <ChainStrip />
+        <BlockTimes recent={recent} me={key?.address} />
+      </div>
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { ConsensusMode } from '@isfcr/core'
 import { api, type BlockSummary, type LotteryStatus, type PosStatus } from '../api'
 import { Big } from '../components/Big'
+import { Logo } from '../components/Logo'
 import { ForkView, readPeer } from '../components/ForkView'
 import { GameProjector } from '../components/GameProjector'
 import { EventFeed } from '../components/EventFeed'
@@ -52,9 +53,10 @@ export function Projector() {
     <div className="projector">
       <header className="row between" style={{ padding: '24px 0' }}>
         <div>
-          <div className="muted">ISFCRcoin testnet · {live.connected ? `${info?.clients ?? 0} connected` : 'offline'}</div>
+          <div className="muted row" style={{ gap: 8 }}><Logo size={22} /> ISFCRcoin testnet · {live.connected ? `${info?.clients ?? 0} connected` : 'offline'}</div>
           <h1 style={{ fontSize: 44, letterSpacing: '-0.04em' }}>Block <span style={{ color: 'var(--orange)' }}>#{info?.height ?? '…'}</span></h1>
         </div>
+        <button className="white" onClick={() => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {})}>Full screen</button>
         <span className="status" style={{ fontSize: 20, padding: '12px 20px' }}><span className={`dot ${live.connected ? 'on' : ''}`} />{info ? modeName(info.mode) : '…'}</span>
       </header>
       {info?.scheduledSwitch && <div className="banner switch" style={{ fontSize: 20, marginBottom: 16 }}>Switching to <b>{modeName(info.scheduledSwitch.mode)}</b> at block {info.scheduledSwitch.activateAt}</div>}

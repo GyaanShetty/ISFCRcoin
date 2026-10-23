@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react'
 
 /** Toasts ("what just happened"), the win celebration, and the rule-change sheet. */
-export interface Toast { id: number; title: string; body: string; tone: 'win' | 'coins' | 'info' | 'warn' }
+export interface Toast { id: number; title: string; body: string; tone: 'win' | 'coins' | 'info' | 'warn'; group?: string }
 interface NotifyState {
   toasts: Toast[]
   celebrate: { height: number; key: number } | null
@@ -15,12 +15,17 @@ const set = (p: Partial<NotifyState>) => {
   listeners.forEach((l) => l())
 }
 let seq = 0
+const timers = new Map<number, ReturnType<typeof setTimeout>>()
 
 export const notify = {
   toast(t: Omit<Toast, 'id'>) {
-    const id = ++seq
-    set({ toasts: [{ ...t, id }, ...state.toasts].slice(0, 2) })
-    setTimeout(() => notify.dismiss(id), 6000)
+    // A toast in the same group replaces the visible one instead of piling up.
+    const existing = t.group ? state.toasts.find((x) => x.group === t.group) : undefined
+    const id = existing?.id ?? ++seq
+    const rest = state.toasts.filter((x) => x.id !== id)
+    set({ toasts: [{ ...t, id }, ...rest].slice(0, 2) })
+    clearTimeout(timers.get(id))
+    timers.set(id, setTimeout(() => notify.dismiss(id), 6000))
   },
   dismiss(id: number) {
     set({ toasts: state.toasts.filter((t) => t.id !== id) })

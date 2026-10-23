@@ -15,6 +15,7 @@ import { Toasts } from './components/Toasts'
 import { Celebrate } from './components/Celebrate'
 import { ModeSheet } from './components/ModeSheet'
 import { notify } from './notify'
+import { Brand } from './components/Logo'
 
 const TABS = [
   { id: 'mine', label: 'Mine' },
@@ -22,6 +23,22 @@ const TABS = [
   { id: 'learn', label: 'Learn' },
   { id: 'ranks', label: 'Ranks' },
 ] as const
+
+/** Laptops: fill the screen (handy on a projector too). Hidden on phones. */
+function FullscreenButton() {
+  const [full, setFull] = useState(!!document.fullscreenElement)
+  useEffect(() => {
+    const on = () => setFull(!!document.fullscreenElement)
+    document.addEventListener('fullscreenchange', on)
+    return () => document.removeEventListener('fullscreenchange', on)
+  }, [])
+  if (!document.documentElement.requestFullscreen) return null
+  return (
+    <button className="small fs-btn" onClick={() => (full ? document.exitFullscreen() : document.documentElement.requestFullscreen()).catch(() => {})}>
+      {full ? 'Exit full screen' : 'Full screen'}
+    </button>
+  )
+}
 
 const route = () => {
   const [tab, ...rest] = location.hash.replace(/^#\/?/, '').split('?')[0].split('/')
@@ -40,11 +57,12 @@ export function App() {
 
   if (tab === 'projector') return <Projector />
   if (tab === 'admin') return <Admin />
-  if (!key || !name) return <div className="app"><Onboarding /></div>
+  if (!key || !name) return <div className="app onboarding"><Onboarding /></div>
   const info = live.info
 
   return (
     <div className="app">
+      <div className="side-brand"><Brand /></div>
       <header className="top">
         <div className="hello">
           <div className="avatar">{initials(name)}</div>
@@ -53,6 +71,7 @@ export function App() {
             <div className="sub">ISFCRcoin · block #{info?.height ?? '…'}</div>
           </div>
         </div>
+        <FullscreenButton />
         <button className="status" onClick={() => info && notify.openSheet(info.nextMode)} title="How these rules work">
           <span className={`dot ${live.connected ? 'on' : ''}`} />{info ? modeName(info.nextMode) : 'offline'}<span className="status-q">?</span>
         </button>

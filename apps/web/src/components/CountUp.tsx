@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 
-const reduced = () => typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
+import { allow } from '../motion'
 
 /** Animates a number from its previous value to the new one, so changes are noticeable. */
 export function useCountUp(target: number, ms = 700): number {
   const [shown, setShown] = useState(target)
   const from = useRef(target)
   useEffect(() => {
-    if (reduced() || from.current === target) {
+    if (from.current === target || !allow('countup', 1500)) {
       from.current = target
       setShown(target)
       return
